@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connection } from '../config';
-import authRouter from './controllers/auth/index.ts';
+import authRouter from './controllers/auth/index';
 
 dotenv.config();
 

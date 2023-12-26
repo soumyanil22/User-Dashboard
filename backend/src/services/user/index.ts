@@ -14,6 +14,7 @@ export const findUserByEmail = async (email: string) => {
  * Creates a new user.
  * @param {string} name
  * @param {string} email
+ * @param {string} phone
  * @param {string} gender
  * @param {string} city
  * @param {string} state
@@ -25,6 +26,7 @@ export const findUserByEmail = async (email: string) => {
 export const createUser = async (
   name: string,
   email: string,
+  phone: string,
   gender: string,
   city: string,
   state: string,
@@ -44,6 +46,7 @@ export const createUser = async (
     const user = new UserModel({
       name,
       email,
+      phone,
       gender,
       referralSource,
       city,

@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema<User>(
       type: String,
       required: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     gender: {
       type: String,
       required: true,

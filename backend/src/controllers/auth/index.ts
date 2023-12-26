@@ -3,19 +3,20 @@ import {
   createUser,
   findUserByEmail,
   validatePassword,
-} from '../../services/user/index.ts';
+} from '../../services/user/index';
 import {
   createToken,
   refreshToken,
   verifyRefreshToken,
-} from '../../services/jwt/index.ts';
-import { User } from '../../models/user.ts';
+} from '../../services/jwt/index';
+import { User } from '../../models/user';
 
 const router = express.Router();
 
 interface RegisterRequestBody {
   name: User['name'];
   email: User['email'];
+  phone: User['phone'];
   gender: User['gender'];
   referralSource: User['referralSource'];
   city: User['city'];
@@ -31,6 +32,11 @@ interface LoginBody {
 router.post('/login', async (req: Request, res: Response) => {
   try {
     const { email, password }: LoginBody = req.body;
+
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ message: 'Invalid input, Param(s) missing!' });
 
     const user = await findUserByEmail(email);
 
@@ -63,6 +69,7 @@ router.post('/register', async (req, res) => {
   const {
     name,
     email,
+    phone,
     gender,
     referralSource,
     city,
@@ -70,14 +77,17 @@ router.post('/register', async (req, res) => {
     password,
   }: RegisterRequestBody = req.body;
 
-  if (!email || !gender || !name || !city || !state || !password) {
-    return res.status(400).json({ message: 'Invalid input' });
+  if (!email || !phone || !gender || !name || !city || !state || !password) {
+    return res
+      .status(400)
+      .json({ message: 'Invalid input, Param(s) missing!' });
   }
 
   try {
     const userId = await createUser(
       name,
       email,
+      phone,
       gender,
       city,
       state,
