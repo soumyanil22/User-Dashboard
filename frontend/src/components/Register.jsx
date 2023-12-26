@@ -83,6 +83,7 @@ const Register = () => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
 
     if (storedToken || token) {
       navigate('/');
