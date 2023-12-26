@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useAuthStore } from './store/authStore';
+import { useEffect } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const token = useAuthStore((store) => store.token);
+  const setToken = useAuthStore((store) => store.setToken);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken || !token) {
+      navigate('/register', { replace: true });
+    } else {
+      setToken(storedToken);
+    }
+  }, [token, navigate]);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="text-2xl h-14 flex items-center justify-center text-center font-bold dark:bg-slate-800 dark:text-white border-b border-stone-500 dark:border-[#282976]">
+        <h1 className="font-mono">User Dashboard</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Outlet />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
