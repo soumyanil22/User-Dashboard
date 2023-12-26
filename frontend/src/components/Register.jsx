@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [state, setState] = useState('');
@@ -18,6 +18,8 @@ const Register = () => {
   const [gender, setGender] = useState('');
   const [city, setCity] = useState('');
   const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
 
   const handleCheck = (checkedKey) => {
     const updatedReferral = {
@@ -59,21 +61,33 @@ const Register = () => {
         email,
         gender,
         password,
-        phoneNumber,
+        phone: phoneNumber,
         city,
         state,
         referralSource: referralVal,
       };
 
-      const res = await axios.post(`/auth/register`, payload);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        payload
+      );
 
-      setToken(res.data['access-token']);
-      localStorage.setItem('token', res.data['access-token']);
+      setToken(res.data['access_token']);
+      localStorage.setItem('token', res.data['access_token']);
+      navigate('/');
     } catch (error) {
       console.log(error);
       alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+
+    if (storedToken || token) {
+      navigate('/');
+    }
+  }, [navigate, token]);
 
   return (
     <>
