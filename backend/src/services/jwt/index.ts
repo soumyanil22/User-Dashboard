@@ -69,5 +69,12 @@ export const verifyRefreshToken = async (token: string) => {
  */
 
 export const verifyToken = async (token: string) => {
-  return jwt.verify(token, process.env.SECRET || '');
+  try {
+    const verify = await jwt.verify(token, process.env.SECRET || '');
+
+    return verify;
+  } catch (error: any) {
+    console.error('Error verifying token:', error);
+    throw new Error(error);
+  }
 };

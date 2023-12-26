@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connection } from '../config';
 import authRouter from './controllers/auth/index';
+import userListRouter from './controllers/userlist/index';
+import { authenticate } from './middlewares/auth';
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/userlist', authenticate, userListRouter);
 
 app.listen(port, async () => {
   try {
