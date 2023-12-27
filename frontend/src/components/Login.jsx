@@ -1,26 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import useAuthRedirect from '../hooks/useAuthRedirect';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const token = useAuthStore((state) => state.token);
   const setToken = useAuthStore((state) => state.setToken);
-  const navigate = useNavigate();
-
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-
-    if (storedToken || token) {
-      navigate('/');
-    }
-  }, [navigate, token]);
+  useAuthRedirect();
 
   const handleSubmit = async (e) => {
     try {
@@ -35,6 +29,7 @@ const Login = () => {
 
       setToken(res.data['access_token']);
       localStorage.setItem('token', res.data['access_token']);
+      navigate('/dashboard');
     } catch (error) {
       console.error(error);
       alert(error.message);

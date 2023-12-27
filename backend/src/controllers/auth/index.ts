@@ -52,6 +52,9 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const token = await createToken(user._id);
     const refToken = await refreshToken(user._id);
+
+    res.clearCookie('jwt');
+
     res.cookie('jwt', refToken, {
       httpOnly: true,
       sameSite: 'none',

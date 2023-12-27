@@ -3,20 +3,29 @@ import axios from 'axios';
 import { useToastStore } from '../store/toastStore';
 import { useUserListStore } from '../store/userlist';
 import { useAuthStore } from '../store/authStore';
+import useRefreshToken from '../hooks/useRefreshToken';
+import useAuthRedirect from '../hooks/useAuthRedirect';
 
 const UserList = () => {
   const show = useToastStore((store) => store.show);
   const hide = useToastStore((store) => store.hide);
   const userList = useUserListStore((store) => store.userList);
   const setUserList = useUserListStore((store) => store.setUserList);
-  const token = useAuthStore((store) => store.token);
-  const setToken = useAuthStore((store) => store.setToken);
+  const [token, setTokenExpired, tokenExpired] = useAuthStore((store) => [
+    store.token,
+    store.setToken,
+    store.setTokenExpired,
+    store.tokenExpired,
+  ]);
   const [showForm, setShowForm] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef(null);
+  const refreshToken = useRefreshToken();
+
+  useAuthRedirect();
 
   const fetchUserList = async () => {
     try {
@@ -26,10 +35,13 @@ const UserList = () => {
         },
       });
 
-      console.log(res.data);
       setUserList(res.data.list.userList);
     } catch (error) {
       console.error(error);
+      if (error.response.data.error.includes('jwt expired')) {
+        localStorage.removeItem('token');
+        setTokenExpired(true);
+      }
       show('Something went wrong');
       setTimeout(() => {
         hide();
@@ -73,11 +85,10 @@ const UserList = () => {
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
+    if (tokenExpired) {
+      refreshToken();
     }
-  }, []);
+  }, [tokenExpired]);
 
   useEffect(() => {
     if (token) {

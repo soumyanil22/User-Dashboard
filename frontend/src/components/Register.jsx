@@ -19,7 +19,6 @@ const Register = () => {
   const [city, setCity] = useState('');
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
-  const token = useAuthStore((state) => state.token);
 
   const handleCheck = (checkedKey) => {
     const updatedReferral = {
@@ -82,13 +81,11 @@ const Register = () => {
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
-
-    if (storedToken || token) {
-      navigate('/');
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/dashboard');
     }
-  }, [navigate, token]);
+  }, [navigate]);
 
   return (
     <>

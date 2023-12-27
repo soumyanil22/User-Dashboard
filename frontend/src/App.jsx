@@ -5,22 +5,47 @@ import { useEffect } from 'react';
 import useNetworkStatus from './hooks/useNetworkStatus';
 import { useToastStore } from './store/toastStore';
 import Toast from './Toast';
+import axios from 'axios';
+import useAuthRedirect from './hooks/useAuthRedirect';
 
 function App() {
-  const token = useAuthStore((store) => store.token);
-  const setToken = useAuthStore((store) => store.setToken);
+  const [token, setToken, tokenExpired] = useAuthStore((store) => [
+    store.token,
+    store.setToken,
+    store.tokenExpired,
+  ]);
   const navigate = useNavigate();
   const isOnline = useNetworkStatus();
   const [show, hide] = useToastStore((state) => [state.show, state.hide]);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (!storedToken || !token) {
-      navigate('/register', { replace: true });
-    }
+  useAuthRedirect();
 
-    setToken(storedToken);
-    navigate('/dashboard', { replace: true });
+  const refreshToken = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/refresh`, {
+        withCredentials: true,
+      });
+
+      localStorage.setItem('token', res.data.access_token);
+      setToken(res.data.access_token);
+      show('Token refreshed successfully');
+      setTimeout(() => {
+        hide();
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      show('Failed to refresh token, Login again!');
+      setTimeout(() => {
+        hide();
+      }, 3000);
+    }
+  };
+
+  useEffect(() => {
+    if (tokenExpired) {
+      localStorage.removeItem('token');
+      refreshToken();
+    }
 
     if (!isOnline) {
       show('You are offline');
@@ -29,7 +54,7 @@ function App() {
         hide();
       }, [3000]);
     }
-  }, [token, navigate]);
+  }, [token, tokenExpired, navigate]);
 
   return (
     <>
