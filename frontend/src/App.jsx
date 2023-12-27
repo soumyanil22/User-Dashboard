@@ -1,5 +1,5 @@
 import './App.css';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
 import useNetworkStatus from './hooks/useNetworkStatus';
