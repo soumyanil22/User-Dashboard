@@ -5,15 +5,16 @@ import { useUserListStore } from '../store/userlist';
 import { useAuthStore } from '../store/authStore';
 import useRefreshToken from '../hooks/useRefreshToken';
 import useAuthRedirect from '../hooks/useAuthRedirect';
+import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
   const show = useToastStore((store) => store.show);
   const hide = useToastStore((store) => store.hide);
   const userList = useUserListStore((store) => store.userList);
   const setUserList = useUserListStore((store) => store.setUserList);
+  const setShowList = useUserListStore((state) => state.setShowList);
   const [token, setTokenExpired, tokenExpired] = useAuthStore((store) => [
     store.token,
-    store.setToken,
     store.setTokenExpired,
     store.tokenExpired,
   ]);
@@ -24,6 +25,7 @@ const UserList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef(null);
   const refreshToken = useRefreshToken();
+  const navigate = useNavigate();
 
   useAuthRedirect();
 
@@ -126,7 +128,13 @@ const UserList = () => {
                 <p>{username}</p>
                 <p>{email}</p>
                 <p>{phone}</p>
-                <button className="h-8 disabled:dark:bg-slate-800 hover:shadow-blue-600 dark:hover:border-amber-300 hover:shadow-md dark:hover:shadow-amber-300 flex justify-center items-center w-36 dark:hover:text-amber-300 ml-10 border border-stone-500 rounded-md">
+                <button
+                  onClick={() => {
+                    setShowList(false);
+                    navigate(`/dashboard/user/${_id}`);
+                  }}
+                  className="h-8 disabled:dark:bg-slate-800 hover:shadow-blue-600 dark:hover:border-amber-300 hover:shadow-md dark:hover:shadow-amber-300 flex justify-center items-center w-36 dark:hover:text-amber-300 ml-10 border border-stone-500 rounded-md"
+                >
                   View Details
                 </button>
               </div>

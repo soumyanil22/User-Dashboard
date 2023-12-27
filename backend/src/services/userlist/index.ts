@@ -112,3 +112,14 @@ export const createUser = async (
     throw new Error(error);
   }
 };
+
+export const getUser = async (_id: mongoose.Types.ObjectId) => {
+  try {
+    const user = await UserListModel.findOne({ _id });
+
+    return user;
+  } catch (error: any) {
+    console.error('Error fetching user:', error);
+    throw new Error(error);
+  }
+};

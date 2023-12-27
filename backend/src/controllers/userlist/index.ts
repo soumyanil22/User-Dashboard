@@ -3,6 +3,7 @@ import {
   createUser,
   deleteUser,
   editUser,
+  getUser,
   getUserList,
 } from '../../services/userlist';
 import express, { Request, Response } from 'express';
@@ -20,6 +21,26 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json({ message: 'List fetched successfully', list });
   } catch (error: any) {
     console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+});
+
+router.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const userId = new mongoose.Types.ObjectId(id);
+
+    const user = await getUser(userId);
+
+    res.status(200).json({ message: 'User fetched successfully', user });
+  } catch (error: any) {
     res
       .status(500)
       .json({ message: 'Something went wrong', error: error.message });

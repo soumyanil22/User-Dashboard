@@ -7,6 +7,7 @@ import ErrorPage from './ErrorPage.jsx';
 import Register from './components/Register.jsx';
 import Login from './components/Login.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import UserDetails from './components/UserDetails.jsx';
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,12 @@ const router = createBrowserRouter([
     path: '/dashboard',
     errorElement: <ErrorPage />,
     element: <Dashboard />,
-    children: [],
+    children: [
+      {
+        path: '/dashboard/user/:id',
+        element: <UserDetails />,
+      },
+    ],
   },
 ]);
 
