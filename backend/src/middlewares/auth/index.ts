@@ -21,5 +21,8 @@ export const authenticate = async (
     }
 
     next();
-  } catch (error) {}
+  } catch (error: any) {
+    res.status(401).json({ message: 'Unauthorized', error: error.message });
+    next(error);
+  }
 };

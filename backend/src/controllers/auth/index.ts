@@ -51,6 +51,13 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     const token = await createToken(user._id);
+    const refToken = await refreshToken(user._id);
+    res.cookie('jwt', refToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      maxAge: 2 * 24 * 60 * 60 * 1000,
+    });
     return res
       .json({
         message: 'Login successful',
@@ -114,7 +121,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/refresh', async (req, res) => {
+router.get('/refresh', async (req, res) => {
   try {
     const token = req.cookies?.jwt;
 
