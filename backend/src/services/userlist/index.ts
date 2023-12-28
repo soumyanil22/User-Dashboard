@@ -3,6 +3,7 @@ import { UserListModel } from '../../models/user-list';
 
 /**
  * Get a list of users.
+ * @param {mongoose.Types.ObjectId} id
  * @param {number} page
  * @param {number} perPage
  * @returns {Promise<UserListModel>} A promise that resolves to the Userlist.
@@ -10,6 +11,7 @@ import { UserListModel } from '../../models/user-list';
  */
 
 export const getUserList = async (
+  id: mongoose.Types.ObjectId,
   search: string,
   page: number = 1,
   perPage: number = 10
@@ -17,6 +19,7 @@ export const getUserList = async (
   try {
     const skipValue = (page - 1) * perPage;
     const searchQuery = {
+      _id: { $eq: id },
       $or: [
         { username: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },

@@ -4,6 +4,7 @@ export interface UserList {
   username: string;
   email: string;
   phone: string;
+  userId: mongoose.Types.ObjectId;
 }
 
 const userListSchema = new mongoose.Schema<UserList>(
@@ -21,6 +22,11 @@ const userListSchema = new mongoose.Schema<UserList>(
       type: String,
       required: true,
       unique: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
   },
   { timestamps: true }

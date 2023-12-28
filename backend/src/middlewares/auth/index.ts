@@ -14,13 +14,16 @@ export const authenticate = async (
       res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const validateToken = await verifyToken(token!);
+    const decodedToken = await verifyToken(token!);
 
-    if (!validateToken) {
-      res.status(401).json({ message: 'Unauthorized' });
+    if (typeof decodedToken !== 'string' && decodedToken?.id) {
+      req.user = {
+        id: decodedToken.id,
+      };
+      next();
+    } else {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
-
-    next();
   } catch (error: any) {
     res.status(401).json({ message: 'Unauthorized', error: error.message });
     next(error);

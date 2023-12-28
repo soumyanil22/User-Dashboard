@@ -21,7 +21,7 @@ export enum City {
 }
 
 export enum State {
-  Gujarat = 'gujarat',
+  Gujarat = 'gujrat',
   Maharashtra = 'maharashtra',
   Karnataka = 'karnataka',
 }
@@ -56,22 +56,22 @@ const userSchema = new mongoose.Schema<User>(
     gender: {
       type: String,
       required: true,
-      enum: ['male', 'female', 'others'],
+      enum: Object.values(Gender),
     },
     referralSource: {
       type: String,
       required: false,
-      enum: ['linkedin', 'friends', 'job-portal', 'others'],
+      enum: Object.values(ReferralSource),
     },
     city: {
       type: String,
       required: true,
-      enum: ['mumbai', 'pune', 'ahmedabad', 'bengaluru'],
+      enum: Object.values(City),
     },
     state: {
       type: String,
       required: true,
-      enum: ['gujrat', 'maharashtra', 'karnataka'],
+      enum: Object.values(State),
     },
     password: {
       type: String,

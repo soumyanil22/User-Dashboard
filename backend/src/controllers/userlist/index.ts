@@ -12,11 +12,18 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
+    const id = req.user?.id;
     const page = parseInt(req.query?.page as string) || 1;
     const perPage = parseInt(req.query?.perPage as string) || 10;
     const search = (req.query?.search as string) ?? '';
 
-    const list = await getUserList(search, page, perPage);
+    if (!id) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const userId = new mongoose.Types.ObjectId(id);
+
+    const list = await getUserList(userId, search, page, perPage);
 
     res.status(200).json({ message: 'List fetched successfully', list });
   } catch (error: any) {
