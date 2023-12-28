@@ -66,10 +66,7 @@ const Register = () => {
         referralSource: referralVal,
       };
 
-      const res = await axios.post(
-        `/api/auth/register`,
-        payload
-      );
+      const res = await axios.post(`/api/auth/register`, payload);
 
       setToken(res.data['access_token']);
       localStorage.setItem('token', res.data['access_token']);
@@ -91,7 +88,7 @@ const Register = () => {
     <>
       <form
         onSubmit={handleSubmit}
-        className={`w-[440px] h-[630px] border px-6 box-border border-stone-500 dark:border-[#6366f1] rounded-lg mx-auto mt-8 dark:bg-slate-800 dark:text-white}`}
+        className={`w-[440px] h-[650px] border px-6 box-border border-stone-500 dark:border-[#6366f1] rounded-lg mx-auto mt-6 dark:bg-slate-800 dark:text-white}`}
       >
         <h4 className="text-xl text-center dark:text-white mb-5 mt-2 font-semibold">
           Register
@@ -102,7 +99,8 @@ const Register = () => {
           className="dark:text-white outline outline-stone-500 dark:bg-slate-800 w-full h-9 pl-2 dark:outline dark:outline-[#6366f1] rounded-sm"
           type="text"
           placeholder="Enter your name"
-          minLength={3}
+          pattern="[A-Za-z]*"
+          title="Only alphabetic characters are allowed"
           required
         />
         <br />
@@ -121,8 +119,10 @@ const Register = () => {
           className="dark:text-white outline outline-stone-500 dark:bg-slate-800 mt-4 w-full h-9 pl-2 dark:outline dark:outline-[#6366f1] rounded-sm"
           type="tel"
           minLength={10}
-          maxLength={13}
+          maxLength={14}
           placeholder="+91XXXXXXXXXX"
+          pattern="\+?[0-9]+"
+          title="Only numbers are allowed"
           required
         />
         <br />
@@ -162,6 +162,19 @@ const Register = () => {
           />
           <label htmlFor="female" className="ml-1">
             female
+          </label>
+          <br />
+          <input
+            value={'others'}
+            checked={gender === 'others'}
+            id="others"
+            name="gender"
+            onChange={handleGender}
+            className="dark:text-white dark:bg-slate-800 has-[:checked]:ring-indigo-200"
+            type="radio"
+          />
+          <label htmlFor="others" className="ml-1">
+            others
           </label>
         </fieldset>
         <fieldset className="mt-4">
