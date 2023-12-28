@@ -1,12 +1,20 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import UserList from './UserList';
 import { useUserListStore } from '../store/userlist';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
   const [showList, setShowList] = useUserListStore((state) => [
     state.showList,
     state.setShowList,
   ]);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      setShowList(true);
+    }
+  }, [location, setShowList]);
 
   return (
     <div className="w-full flex box-border">
