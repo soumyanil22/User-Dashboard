@@ -12,7 +12,8 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const id = req.user?.id;
+    const customReq = req as Request & { user?: { id: string } };
+    const id = customReq?.user?.id;
     const page = parseInt(req.query?.page as string) || 1;
     const perPage = parseInt(req.query?.perPage as string) || 10;
     const search = (req.query?.search as string) ?? '';

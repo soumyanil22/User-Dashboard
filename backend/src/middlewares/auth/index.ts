@@ -17,7 +17,8 @@ export const authenticate = async (
     const decodedToken = await verifyToken(token!);
 
     if (typeof decodedToken !== 'string' && decodedToken?.id) {
-      req.user = {
+      const customReq = req as Request & { user?: { id: string } };
+      customReq.user = {
         id: decodedToken.id,
       };
       next();
