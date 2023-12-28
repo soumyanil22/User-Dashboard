@@ -13,7 +13,7 @@ const UserDetails = () => {
   async function fetchUser() {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/userlist/${id}`,
+        `/api/userlist/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

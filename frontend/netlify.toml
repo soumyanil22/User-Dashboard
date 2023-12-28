@@ -2,3 +2,8 @@
   from = "/*"
   to = "/index.html"
   status = 200
+[[redirects]]
+  from = "/api/*"
+  to = "http://ec2-15-206-216-198.ap-south-1.compute.amazonaws.com:6060/:splat"
+  status = 200
+  force = true

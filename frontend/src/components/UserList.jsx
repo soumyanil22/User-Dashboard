@@ -31,7 +31,7 @@ const UserList = () => {
 
   const fetchUserList = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/userlist`, {
+      const res = await axios.get(`/api/userlist`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ const UserList = () => {
       setIsLoading(true);
       e.preventDefault();
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/userlist`,
+        `/api/userlist`,
         {
           username,
           email,

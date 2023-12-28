@@ -67,7 +67,7 @@ const Register = () => {
       };
 
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        `/api/auth/register`,
         payload
       );
 
