@@ -22,7 +22,7 @@ function App() {
 
   const refreshToken = async () => {
     try {
-      const res = await axios.get(`${/api/refresh`, {
+      const res = await axios.get(`/api/refresh`, {
         withCredentials: true,
       });
 
