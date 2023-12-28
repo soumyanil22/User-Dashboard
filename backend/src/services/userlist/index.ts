@@ -18,29 +18,31 @@ export const getUserList = async (
 ) => {
   try {
     const skipValue = (page - 1) * perPage;
-    const searchQuery = {
-      _id: { $eq: id },
-      $or: [
+    const searchQuery: any = { userId: { $eq: id } };
+
+    if (search) {
+      searchQuery.$or = [
         { username: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
         { phone: { $regex: search, $options: 'i' } },
-      ],
-    };
+      ];
+    }
 
     const [userList, total] = await Promise.all([
-      await UserListModel.find(searchQuery).limit(perPage).skip(skipValue),
-      await UserListModel.countDocuments(searchQuery),
+      UserListModel.find(searchQuery).limit(perPage).skip(skipValue),
+      UserListModel.countDocuments(searchQuery),
     ]);
 
     return { userList, total };
   } catch (error: any) {
     console.error('Error fetching user list:', error);
-    throw new Error(error);
+    throw error;
   }
 };
 
 /**
  *
+ * @param {mongoose.Types.ObjectId} userId
  * @param {mongoose.Types.ObjectId} _id
  * @param {string} username
  * @param {string} email
@@ -50,6 +52,7 @@ export const getUserList = async (
  */
 
 export const editUser = async (
+  userId: mongoose.Types.ObjectId,
   _id: mongoose.Types.ObjectId,
   username: string,
   email: string,
@@ -57,7 +60,7 @@ export const editUser = async (
 ) => {
   try {
     const user = await UserListModel.findOneAndUpdate(
-      { _id },
+      { _id, userId },
       { username: username, email: email, phone: phone }
     );
 
@@ -70,14 +73,21 @@ export const editUser = async (
 
 /**
  *
+ * @param {mongoose.Types.ObjectId} userId
  * @param {mongoose.Types.ObjectId} _id
  * @returns {Promise<UserListModel>} A promise that resolves to the deleted user.
  * @throws {Error} Throws an error if the user is not found.
  */
 
-export const deleteUser = async (_id: mongoose.Types.ObjectId) => {
+export const deleteUser = async (
+  userId: mongoose.Types.ObjectId,
+  _id: mongoose.Types.ObjectId
+) => {
   try {
-    const user = await UserListModel.findOneAndDelete({ _id });
+    const user = await UserListModel.findOneAndDelete({
+      userId,
+      _id,
+    });
 
     return user;
   } catch (error: any) {
@@ -88,6 +98,7 @@ export const deleteUser = async (_id: mongoose.Types.ObjectId) => {
 
 /**
  *
+ * @param {mongoose.Types.ObjectId} id
  * @param {string} username
  * @param {string} email
  * @param {string} phone
@@ -96,12 +107,14 @@ export const deleteUser = async (_id: mongoose.Types.ObjectId) => {
  */
 
 export const createUser = async (
+  id: mongoose.Types.ObjectId,
   username: string,
   email: string,
   phone: string
 ) => {
   try {
     const user = new UserListModel({
+      userId: id,
       username,
       email,
       phone,
@@ -116,9 +129,12 @@ export const createUser = async (
   }
 };
 
-export const getUser = async (_id: mongoose.Types.ObjectId) => {
+export const getUser = async (
+  userId: mongoose.Types.ObjectId,
+  _id: mongoose.Types.ObjectId
+) => {
   try {
-    const user = await UserListModel.findOne({ _id });
+    const user = await UserListModel.findOne({ userId, _id });
 
     return user;
   } catch (error: any) {
