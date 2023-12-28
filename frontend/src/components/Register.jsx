@@ -102,6 +102,7 @@ const Register = () => {
           className="dark:text-white outline outline-stone-500 dark:bg-slate-800 w-full h-9 pl-2 dark:outline dark:outline-[#6366f1] rounded-sm"
           type="text"
           placeholder="Enter your name"
+          minLength={3}
           required
         />
         <br />
@@ -118,8 +119,10 @@ const Register = () => {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="dark:text-white outline outline-stone-500 dark:bg-slate-800 mt-4 w-full h-9 pl-2 dark:outline dark:outline-[#6366f1] rounded-sm"
-          type="text"
-          placeholder="Enter your phone number"
+          type="tel"
+          minLength={10}
+          maxLength={13}
+          placeholder="+91XXXXXXXXXX"
           required
         />
         <br />
@@ -128,6 +131,7 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="dark:text-white outline outline-stone-500 dark:bg-slate-800 mt-4 w-full h-9 pl-2 dark:outline dark:outline-[#6366f1] rounded-sm"
           type="password"
+          minLength={7}
           placeholder="Enter your password"
           required
         />
